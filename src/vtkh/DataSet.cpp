@@ -361,7 +361,7 @@ DataSet::GetGlobalRange(const std::string &field_name) const
                 1,
                 MPI_INT,
                 mpi_comm);
-  int max_non_zero = 0;;
+  int max_non_zero = 1;;
   //
   // find the largest component
   //
