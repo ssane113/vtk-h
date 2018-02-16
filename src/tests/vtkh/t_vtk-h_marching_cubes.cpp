@@ -67,3 +67,52 @@ TEST(vtkh_marching_cubes, vtkh_serial_marching_cubes)
 
   delete iso_output; 
 }
+
+TEST(vtkh_marching_cubes, vtkh_serial_marching_cubes_empty)
+{
+  vtkh::DataSet data_set;
+ 
+  const int base_size = 32;
+  const int num_blocks = 2; 
+  
+  for(int i = 0; i < num_blocks; ++i)
+  {
+    data_set.AddDomain(CreateTestData(i, num_blocks, base_size), i);
+  }
+
+  vtkh::MarchingCubes marcher;
+  marcher.SetInput(&data_set);
+  marcher.SetField("point_data"); 
+
+  const int num_vals = 1;
+  double iso_vals [num_vals];
+  iso_vals[0] = -100; // ask for something that does not exist
+
+  marcher.SetIsoValues(iso_vals, num_vals);
+  marcher.AddMapField("point_data");
+  marcher.AddMapField("cell_data");
+  marcher.Update();
+
+  vtkh::DataSet *iso_output = marcher.GetOutput();
+
+  vtkm::Bounds bounds = iso_output->GetGlobalBounds();
+  float bg_color[4] = { 0.f, 0.f, 0.f, 1.f};
+  vtkm::rendering::Camera camera;
+  camera.ResetToBounds(bounds);
+  vtkh::Render render = vtkh::MakeRender<vtkh::RayTracer>(512, 
+                                                          512, 
+                                                          camera, 
+                                                          *iso_output, 
+                                                          "iso_empyt",
+                                                           bg_color);  
+  vtkh::RayTracer tracer;
+  tracer.SetInput(iso_output);
+  tracer.SetField("cell_data"); 
+
+  vtkh::Scene scene;
+  scene.AddRenderer(&tracer);
+  scene.AddRender(render);
+  scene.Render();
+
+  delete iso_output; 
+}

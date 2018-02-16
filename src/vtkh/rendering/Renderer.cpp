@@ -132,6 +132,7 @@ Renderer::Composite(const int &num_images)
 void 
 Renderer::PreExecute() 
 {
+
   if(!m_range.IsNonEmpty())
   {
     // we have not been given a range, so ask the data set

@@ -272,7 +272,16 @@ DataSet::GetGlobalBounds(vtkm::Id coordinate_system_index) const
 vtkm::cont::ArrayHandle<vtkm::Range> 
 DataSet::GetGlobalRange(const vtkm::Id index) const
 {
-  assert(m_domains.size() > 0); 
+  if(m_domains.size() == 0)
+  {
+    // we don't have any data return empty range
+    vtkm::cont::ArrayHandle<vtkm::Range> ranges;  
+    ranges.Allocate(1);
+    vtkm::Range range; 
+    ranges.GetPortalControl().Set(0, range);
+    return ranges;
+  }
+
   vtkm::cont::Field field = m_domains.at(0).GetField(index);
   std::string field_name = field.GetName();
   return this->GetGlobalRange(field_name);
