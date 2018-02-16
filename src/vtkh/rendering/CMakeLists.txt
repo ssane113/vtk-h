@@ -6,6 +6,7 @@ set(Headers
   Image.hpp
   ImageCompositor.hpp
   MeshRenderer.hpp
+  Rasterizer.hpp
   RayTracer.hpp
   Render.hpp
   Renderer.hpp
@@ -18,6 +19,7 @@ set(Sources
   Annotator.cpp
   Image.cpp
   MeshRenderer.cpp
+  Rasterizer.cpp
   RayTracer.cpp
   Render.cpp
   Renderer.cpp
@@ -27,7 +29,7 @@ set(Sources
   )
 
 
-set(vtkh_rendering_deps vtkh_core vtkh_utils )
+set(vtkh_rendering_deps vtkh_core vtkh_utils openmp)
 
 if(VTKm_CUDA_FOUND)
     # triggers cuda compile
@@ -41,6 +43,7 @@ blt_add_library(
   DEPENDS_ON ${vtkh_rendering_deps}
   )
 
+blt_add_target_compile_flags(TO vtkh_rendering FLAGS "-DVTKH_USE_OPENMP -fopenmp")
 # target_link_libraries(vtkh_rendering
 #   PRIVATE vtkh_dependencies_private)
 #
@@ -90,7 +93,7 @@ set(ParallelSources
 
 if (MPI_FOUND)
     
-    set(vtkh_rendering_par_deps vtkh_core_par vtkh_utils )
+    set(vtkh_rendering_par_deps vtkh_core_par vtkh_utils openmp )
 
     # necessary b/c of how find_cuda works
     if(CUDA_FOUND)
@@ -107,6 +110,7 @@ if (MPI_FOUND)
         DEPENDS_ON ${vtkh_rendering_par_deps}
     )
 
+    blt_add_target_compile_flags(TO vtkh_rendering_par FLAGS "-DVTKH_USE_OPENMP -fopenmp")
     if(CUDA_FOUND)
          SET(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS_PREV})
     else()
