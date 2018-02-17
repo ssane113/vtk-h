@@ -214,12 +214,19 @@ Renderer::DoExecute()
       vtkmCanvasPtr p_canvas = m_renders[i].GetDomainCanvas(domain_id);
       const vtkmCamera &camera = m_renders[i].GetCamera(); 
       m_mapper->SetCanvas(&(*p_canvas));
-      m_mapper->RenderCells(cellset,
-                            coords,
-                            field,
-                            m_color_table,
-                            camera,
-                            m_range);
+      try
+      {
+        m_mapper->RenderCells(cellset,
+                              coords,
+                              field,
+                              m_color_table,
+                              camera,
+                              m_range);
+      }
+      catch(...)
+      {
+        //silent failure   
+      }
 
     }
   }

@@ -296,6 +296,7 @@ DataSet::GetGlobalRange(const std::string &field_name) const
   vtkm::cont::ArrayHandle<vtkm::Range> range;
   vtkm::Id num_components = 0;
 
+
   for(size_t i = 0; i < num_domains; ++i)
   {
     if(!m_domains[0].HasField(field_name))
@@ -361,7 +362,7 @@ DataSet::GetGlobalRange(const std::string &field_name) const
                 1,
                 MPI_INT,
                 mpi_comm);
-  int max_non_zero = 0;;
+  int max_non_zero = 1;
   //
   // find the largest component
   //
