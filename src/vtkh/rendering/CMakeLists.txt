@@ -29,7 +29,7 @@ set(Sources
   )
 
 
-set(vtkh_rendering_deps vtkh_core vtkh_utils openmp)
+set(vtkh_rendering_deps vtkh_core vtkh_utils)
 
 if(VTKm_CUDA_FOUND)
     # triggers cuda compile
@@ -43,7 +43,7 @@ blt_add_library(
   DEPENDS_ON ${vtkh_rendering_deps}
   )
 
-blt_add_target_compile_flags(TO vtkh_rendering FLAGS "-DVTKH_USE_OPENMP -fopenmp")
+blt_add_target_compile_flags(TO vtkh_rendering FLAGS "-DVTKH_USE_OPENMP")
 # target_link_libraries(vtkh_rendering
 #   PRIVATE vtkh_dependencies_private)
 #
@@ -93,7 +93,7 @@ set(ParallelSources
 
 if (MPI_FOUND)
     
-    set(vtkh_rendering_par_deps vtkh_core_par vtkh_utils openmp )
+    set(vtkh_rendering_par_deps vtkh_core_par vtkh_utils_par )
 
     # necessary b/c of how find_cuda works
     if(CUDA_FOUND)
@@ -110,7 +110,7 @@ if (MPI_FOUND)
         DEPENDS_ON ${vtkh_rendering_par_deps}
     )
 
-    blt_add_target_compile_flags(TO vtkh_rendering_par FLAGS "-DVTKH_USE_OPENMP -fopenmp")
+    blt_add_target_compile_flags(TO vtkh_rendering_par FLAGS "-DVTKH_USE_OPENMP ")
     if(CUDA_FOUND)
          SET(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS_PREV})
     else()

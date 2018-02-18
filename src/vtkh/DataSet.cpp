@@ -173,10 +173,34 @@ DataSet::GetDomainBounds(const int &domain_index,
        <<"domaim "<<domain_index<<". vtkm error message: "<<error.GetMessage();
     throw Error(msg.str());
   }
-
   return coords.GetBounds();
 }
 
+bool ValidBounds(const vtkm::Bounds &bounds)
+{
+  bool valid = true;
+  if(!bounds.X.IsNonEmpty() || 
+     bounds.X.Min == vtkm::NegativeInfinity64() || 
+     bounds.X.Max == vtkm::Infinity64())
+  {
+    valid = false;
+  }
+
+  if(!bounds.Y.IsNonEmpty() || 
+     bounds.Y.Min == vtkm::NegativeInfinity64() || 
+     bounds.Y.Max == vtkm::Infinity64())
+  {
+    valid = false;
+  }
+
+  if(!bounds.Z.IsNonEmpty() || 
+     bounds.Z.Min == vtkm::NegativeInfinity64() || 
+     bounds.Z.Max == vtkm::Infinity64())
+  {
+    valid = false;
+  }
+  return valid;
+}
 
 vtkm::Bounds 
 DataSet::GetBounds(vtkm::Id coordinate_system_index) const
@@ -189,7 +213,8 @@ DataSet::GetBounds(vtkm::Id coordinate_system_index) const
   for(size_t i = 0; i < num_domains; ++i)
   {
     vtkm::Bounds dom_bounds = GetDomainBounds(i, index);
-    bounds.Include(dom_bounds);
+    
+    if(ValidBounds(dom_bounds)) bounds.Include(dom_bounds);
   }
 
   return bounds;
@@ -203,7 +228,6 @@ DataSet::GetGlobalBounds(vtkm::Id coordinate_system_index) const
 
 #ifdef PARALLEL
   MPI_Comm mpi_comm = vtkh::GetMPIComm();
-
   vtkm::Float64 x_min = bounds.X.Min;
   vtkm::Float64 x_max = bounds.X.Max;
   vtkm::Float64 y_min = bounds.Y.Min;

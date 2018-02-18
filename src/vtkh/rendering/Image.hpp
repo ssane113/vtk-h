@@ -38,7 +38,14 @@ struct Image
         m_pixels.resize(dx * dy * 4);
         m_depths.resize(dx * dy);
     }
-
+    std::string ToString()
+    {
+      std::stringstream ss;
+      ss<<" Image orig "<<m_orig_bounds<<" bounds "<<m_bounds<<"\n";
+      ss<<"Pixels "<<m_pixels.size()<<" depth "<<m_depths.size()<<"\n";
+      ss<<" orig rank "<<m_orig_rank<<" has t "<<m_has_transparency<<" order "<<m_composite_order;
+      return ss.str();
+    }
     int GetNumberOfPixels() const 
     {
       return static_cast<int>(m_pixels.size() / 4); 

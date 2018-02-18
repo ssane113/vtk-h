@@ -1,4 +1,5 @@
 #include <vtkh/rendering/ImageCompositor.hpp>
+#include <vtkh/rendering/compositing/MPICollect.hpp>
 #include "RadixKCompositor.hpp"
 #include "vtkh_diy_collect.hpp"
 #include "vtkh_diy_utils.hpp"
@@ -126,7 +127,6 @@ RadixKCompositor::CompositeSurface(diy::mpi::communicator &diy_comm, Image &imag
     const int magic_k = 8;
 
     diy::Master master(diy_comm, num_threads);
-
     // create an assigner with one block per rank
     diy::ContiguousAssigner assigner(num_blocks, num_blocks); 
     AddImageBlock create(master, image);
@@ -142,15 +142,16 @@ RadixKCompositor::CompositeSurface(diy::mpi::communicator &diy_comm, Image &imag
                 reduce_images);
 
 
-    diy::all_to_all(master,
-                    assigner,
-                    CollectImages(decomposer),
-                    magic_k);
+    MPICollect(image, MPI_COMM_WORLD);
+    //diy::all_to_all(master,
+    //                assigner,
+    //                CollectImages(decomposer),
+    //                magic_k);
   
-    if(diy_comm.rank() == 0) 
-    {
-      master.prof.output(m_timing_log);
-    }
+    //if(diy_comm.rank() == 0) 
+    //{
+    //  master.prof.output(m_timing_log);
+    //}
   
 }
 

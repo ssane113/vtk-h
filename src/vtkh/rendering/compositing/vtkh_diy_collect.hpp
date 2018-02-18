@@ -7,6 +7,7 @@
 #include <diy/reduce-operations.hpp>
 #include <vtkh/rendering/Image.hpp>
 #include <vtkh/rendering/compositing/vtkh_diy_image_block.hpp>
+#include <vtkh/utils/loggin.hpp>
 
 namespace vtkh 
 {
@@ -33,7 +34,6 @@ struct CollectImages
       {
         int dest_gid = collection_rank;
         diy::BlockID dest = proxy.out_link().target(dest_gid);
-
         proxy.enqueue(dest, block->m_image);
         block->m_image.Clear();
       }

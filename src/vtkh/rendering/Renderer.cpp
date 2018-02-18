@@ -4,6 +4,7 @@
 
 #include <vtkh/utils/vtkm_array_utils.hpp>
 #include <vtkh/utils/vtkm_dataset_info.hpp>
+#include <vtkh/utils/loggin.hpp>
 #include <vtkh/utils/PNGEncoder.hpp>
 #include <vtkm/rendering/raytracing/Logger.h>
 #ifdef PARALLEL
@@ -225,9 +226,8 @@ Renderer::DoExecute()
       }
       catch(...)
       {
-        //silent failure   
+         //VTKH_ERROR("m_mapper failed");
       }
-
     }
   }
 
