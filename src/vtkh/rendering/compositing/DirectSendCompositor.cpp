@@ -33,7 +33,8 @@ struct Redistribute
     if(proxy.in_link().size() == 0)
     {
       std::map<diy::BlockID, std::vector<Image>> outgoing;
-      
+      int rank;
+      MPI_Comm_rank(MPI_COMM_WORLD, &rank);
       for(int i = 0; i < world_size; ++i)
       {
         diy::DiscreteBounds sub_image_bounds;
@@ -41,6 +42,10 @@ struct Redistribute
         vtkm::Bounds vtkm_sub_bounds = DIYBoundsToVTKM(sub_image_bounds);
 
         diy::BlockID dest = proxy.out_link().target(i); 
+        if(rank == 186) 
+        {
+          std::cout<<"destination "<<dest.proc<<" i "<<world_size<<" gid "<<dest.gid<<"\n";
+        }
         outgoing[dest].resize(local_images); 
 
         for(int img = 0;  img < local_images; ++img) 
@@ -48,12 +53,13 @@ struct Redistribute
           outgoing[dest][img].SubsetFrom(block->m_images[img], vtkm_sub_bounds); 
         }
       } //for
-
       typename std::map<diy::BlockID,std::vector<Image>>::iterator it;
       for(it = outgoing.begin(); it != outgoing.end(); ++it)
       {
+        if(it->first.proc == 189) std::cout<<"BAD "<<rank<<"\n";
         proxy.enqueue(it->first, it->second);
       }
+      MPI_Barrier(MPI_COMM_WORLD);
     } // if
     else if(block->m_images.at(0).m_composite_order != -1)
     {
@@ -140,7 +146,10 @@ DirectSendCompositor::CompositeVolume(diy::mpi::communicator &diy_comm,
     const int dims = 2;
     diy::RegularDecomposer<diy::DiscreteBounds> decomposer(dims, global_bounds, num_blocks);
     decomposer.decompose(diy_comm.rank(), assigner, create);
-    
+    if(diy_comm.rank() ==0)
+    {
+      std::cout<<" NUM BLOKS "<<num_blocks<<"\n";
+    }
     diy::all_to_all(master, 
                     assigner, 
                     Redistribute(decomposer), 

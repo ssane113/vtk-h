@@ -46,6 +46,17 @@ public:
 
 void ZBufferComposite(vtkh::Image &front, const vtkh::Image &image)
 {
+  //if(front.m_depths.size() != front.m_pixels.size() / 4 ||
+  //  front.m_bounds.X.Min != image.m_bounds.X.Min || 
+  //  front.m_bounds.Y.Min != image.m_bounds.Y.Min || 
+  //  front.m_bounds.X.Max != image.m_bounds.X.Max || 
+  //  front.m_bounds.Y.Max != image.m_bounds.Y.Max )
+  //{
+  //  int rank; MPI_Rank(MPI_COMM_WORLD, &rank);
+  //  std::cout<<"front "<<rank<<" "; front.Print();
+  //  std::cout<<"back "<< rank<<" "; image.Print();
+  //}
+
   assert(front.m_depths.size() == front.m_pixels.size() / 4);
   assert(front.m_bounds.X.Min == image.m_bounds.X.Min); 
   assert(front.m_bounds.Y.Min == image.m_bounds.Y.Min); 

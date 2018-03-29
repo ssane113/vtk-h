@@ -896,12 +896,18 @@ comm_exchange(ToSendList& to_send, int out_queues_limit)
     to_send.pop_front();
 
     OutgoingQueues& outgoing = outgoing_[from].queues;
+    int c = 0;
     for (OutgoingQueues::iterator it = outgoing.begin(); it != outgoing.end(); ++it)
     {
       BlockID to_proc = it->first;
       int     to      = to_proc.gid;
       int     proc    = to_proc.proc;
-
+      if(proc >= 189)
+      {
+        std::cout<<"BAD PROC "<<proc<<" rank "<<comm_.rank()<<" c "<<c<<" map size "<<outgoing.size()<<"\n";
+        std::cout<<"from "<<from<<"\n";
+      }
+      c++;
       log->debug("Processing queue:      {} <- {} of size {}", to, from, outgoing_[from].queues[to_proc].size());
 
       // There may be local outgoing queues that remained in memory

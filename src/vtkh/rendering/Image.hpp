@@ -39,6 +39,11 @@ struct Image
         m_depths.resize(dx * dy);
     }
 
+    void Print() const 
+    {
+      std::cout<<"bounds "<<m_bounds<<" orig "<<m_orig_bounds<<"\n";
+    }
+
     int GetNumberOfPixels() const 
     {
       return static_cast<int>(m_pixels.size() / 4); 
