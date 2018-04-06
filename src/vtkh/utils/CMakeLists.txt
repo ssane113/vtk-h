@@ -19,11 +19,7 @@ if(TBB_FOUND)
 endif()
 
 if(VTKM_FOUND)
-  list(APPEND vtkh_utils_thirdparty_libs vtkm)
-endif()
-
-if(CUDA_FOUND)
-  list(APPEND vtkh_utils_thirdparty_libs cuda)
+  #list(APPEND vtkh_utils_thirdparty_libs vtkm)
 endif()
 
 blt_add_library(

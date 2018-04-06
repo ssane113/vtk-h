@@ -53,7 +53,6 @@
 #include <vtkm/cont/DataSet.h>
 #include <vtkm/cont/testing/MakeTestDataSet.h>
 #include <vtkm/rendering/Actor.h>
-//#include <vtkm/cont/DeviceAdapter.h>
 #include <iostream>
 
 
